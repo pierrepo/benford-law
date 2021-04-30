@@ -2,6 +2,6 @@
 ._.DS_Store
 .DS_Store
 __pycache__
-.html
-.csv
-.tab
+*.html
+*.csv
+*.tab
