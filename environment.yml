@@ -1,0 +1,12 @@
+name: python-benford
+
+channels:
+    - defaults
+    - conda-forge
+dependencies:
+    - python=3.7.9
+    - numpy
+    - scipy
+    - pandas
+    - matplotlib
+    - jupyterlab>=3
