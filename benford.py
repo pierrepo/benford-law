@@ -54,10 +54,17 @@ def count_first_digit(numbers, nb_digit=1):
     # array size return
     digit_distrib = np.zeros(digit, dtype=int)
     for number in numbers:
-        if len(str(number)) > nb_digit:
-            while str(number)[1] == ".":
-                number *= 10 ** nb_digit
-        first = int(str(number)[0:nb_digit])
+        if type(number) == np.float64 or type(number) == float:
+            number = str(number)
+            if number[0] == "0":
+                number = number[1:len(number)]
+            i = 0
+            while number[i] != ".":
+                i += 1
+            number = number[0:i] + number[i+1:len(number)]
+        else:
+            number = str(number)
+        first = int(number[0:nb_digit])
         digit_distrib[first - (10 ** (nb_digit - 1))] += 1
     return digit_distrib
 
