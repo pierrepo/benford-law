@@ -1,4 +1,4 @@
-name: python-benford
+name: benford
 
 channels:
     - defaults
@@ -8,5 +8,10 @@ dependencies:
     - numpy
     - scipy
     - pandas
+    - xlrd # to read .xls files from Pandas
+    - openpyxl # to read .xlsx files from Pandas
     - matplotlib
     - jupyterlab>=3
+    - pycodestyle
+    - pylint
+    - pydocstyle
