@@ -5,6 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.stats import distributions, power_divergence
 
+np.random.seed(2021)  # Random seed
 
 def get_theoretical_freq_benford(nb_digit=1):
     """Theoretical proportions of Benford's law.
@@ -35,7 +36,7 @@ def count_first_digit(numbers, nb_digit=1):
     """Distribution of the first significant digits of observed data.
 
     Function to return the observed distribution of the first digits of
-    an observed data set.
+    an observed data set. This function removes numbers less than 1.
 
     Parameters
     ¯¯¯¯¯¯¯¯¯¯
@@ -50,15 +51,17 @@ def count_first_digit(numbers, nb_digit=1):
         Distribution of the first significant digits.
 
     """
-    digit = (10 ** nb_digit) - (10 ** (nb_digit - 1))
+    size_array = (10 ** nb_digit) - (10 ** (nb_digit - 1))
     # array size return
-    digit_distrib = np.zeros(digit, dtype=int)
+    digit_distrib = np.zeros(size_array, dtype=int)
     for number in numbers:
-        if len(str(number)) > nb_digit:
-            while str(number)[1] == ".":
-                number *= 10 ** nb_digit
-        first = int(str(number)[0:nb_digit])
-        digit_distrib[first - (10 ** (nb_digit - 1))] += 1
+        if number >= 1:
+            number = str(number * (10 ** nb_digit))
+            first = int(number[0:nb_digit])
+            digit_distrib[first - (10 ** (nb_digit - 1))] += 1
+                
+    nb_delet = (1 - (sum(digit_distrib)/len(numbers))) * 100
+    # print(f" Warning : {nb_delet:.2f}% of numbers remove")
     return digit_distrib
 
 
