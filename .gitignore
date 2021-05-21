@@ -7,3 +7,5 @@ __pycache__
 *.tab
 *.xls
 *.xlsx
+*.txt
+*.tsv

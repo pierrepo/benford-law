@@ -56,6 +56,7 @@ def count_first_digit(numbers, nb_digit=1):
     digit_distrib = np.zeros(size_array, dtype=int)
     for number in numbers:
         if number >= (10 ** nb_digit - 1):
+            number = str(number)
             first = int(number[0:nb_digit])
             digit_distrib[first - (10 ** (nb_digit - 1))] += 1
                 
