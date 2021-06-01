@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 from scipy.stats import distributions, power_divergence
 
 
-def get_theoretical_freq_benford(nb_digit=1):
+def get_theoretical_freq_benford(nb_digit=1, base=10):
     """Theoretical proportions of Benford's law.
 
     Function to return the theoretical proportion of the first
@@ -15,7 +15,9 @@ def get_theoretical_freq_benford(nb_digit=1):
     Parameters
     ¯¯¯¯¯¯¯¯¯¯
     nb_digit : int
-        Number of first digits to consider.
+        Number of first digits to consider. Default is `1`.
+    base : int
+        Mathematical bassis. Default is `10`.
 
     Returns
     ¯¯¯¯¯¯¯
@@ -23,11 +25,11 @@ def get_theoretical_freq_benford(nb_digit=1):
         Theoretical proportion of the first digits considered.
 
     """
-    digit = (10 ** nb_digit) - (10 ** (nb_digit - 1))
+    digit = base-1 #(10 ** nb_digit) - (10 ** (nb_digit - 1))
     p_benford = np.zeros(digit, dtype=float)
     for i in range(digit):
         p_benford[i] = (math.log((1 + (1 / (i + (10 ** (nb_digit - 1))))),
-                                 10))
+                                 base))
     return p_benford
 
 

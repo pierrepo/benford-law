@@ -7,7 +7,8 @@ from scipy.stats import distributions, power_divergence
 
 np.random.seed(2021)  # Random seed
 
-def get_theoretical_freq_benford(nb_digit=1):
+
+def get_theoretical_freq_benford(nb_digit=1, base=10):
     """Theoretical proportions of Benford's law.
 
     Function to return the theoretical proportion of the first
@@ -16,7 +17,9 @@ def get_theoretical_freq_benford(nb_digit=1):
     Parameters
     ¯¯¯¯¯¯¯¯¯¯
     nb_digit : int
-        Number of first digits to consider.
+        Number of first digits to consider. Default is `1`.
+    base : int
+        Mathematical bassis. Default is `10`.
 
     Returns
     ¯¯¯¯¯¯¯
@@ -24,11 +27,11 @@ def get_theoretical_freq_benford(nb_digit=1):
         Theoretical proportion of the first digits considered.
 
     """
-    digit = (10 ** nb_digit) - (10 ** (nb_digit - 1))
+    digit = (base ** nb_digit) - (base ** (nb_digit - 1))
     p_benford = np.zeros(digit, dtype=float)
     for i in range(digit):
-        p_benford[i] = (math.log((1 + (1 / (i + (10 ** (nb_digit - 1))))),
-                                 10))
+        p_benford[i] = (math.log((1 + (1 / (i + (base ** (nb_digit - 1))))),
+                                 base))
     return p_benford
 
 
@@ -137,6 +140,166 @@ def build_hist_freq_ben(freq_obs, freq_theo, nb_digit, title="",
         plt.savefig(f"{name_save}.png", transparent=True)
 
 
+def calculate_pom(data_obs):
+    """Physical order of magnitude
+    
+    Function of calulated physical order of magnitude in a dataset.
+    
+    Parameters
+    ¯¯¯¯¯¯¯¯¯¯
+    data_obs: array of int
+        Interger array of observed dataset.
+
+    Returns
+    ¯¯¯¯¯¯¯
+    pom : float
+        Physical order of magnitude in data_obs.
+    
+    """
+    pom = max(data_obs) / min(data_obs)
+    print(f"POM : {pom}")
+    return pom
+
+
+def calculate_oom(data_obs):
+    """Order of magnitude
+    
+    Function of calculated order of magnitude in a dataset.
+    
+    Parameters
+    ¯¯¯¯¯¯¯¯¯¯
+    data_obs: array of int
+        Interger array of observed dataset.
+
+    Returns
+    ¯¯¯¯¯¯¯
+    pom : float
+        Order of magnitude in data_obs.
+
+    """
+    oom = math.log(calculate_pom(data_obs), 10)
+    print(f"OOM : {oom}")
+    return oom
+
+
+def calculate_ssd(f_obs, f_theo):
+    """Sum of squares deviation
+    
+    Function of calculated sum of squares deviation between a observed
+    proportion and a theoretical proportion.
+    
+    Parameters
+    ¯¯¯¯¯¯¯¯¯¯
+    f_obs : array of float
+        Float array of observed proportion.
+        Proportion is between 0 and 1.
+    f_theo : array of float
+        Float array of theoretical proportion.
+        Proportion is between 0 and 1.
+        
+    returns
+    ¯¯¯¯¯¯¯
+    sdd : float
+        sum of squares deviation
+        
+    Notes
+    -----
+    The orginal formula uses percentage. We transforme proportion
+    to percentage for the calculation.
+
+    """
+    if len(f_theo) != len(f_obs): return -1
+    sdd = sum((100*f_obs - 100*f_theo)**2)
+    print(f"SDD : {sdd}")
+    return sdd
+    
+
+
+def calculate_rmssd(f_obs, f_theo):
+    """Root mean sum of squares deviation
+    
+    Function of calculated root mean sum of squares deviation between a
+    observed proportion and a theoretical proportion.
+    
+    Parameters
+    ¯¯¯¯¯¯¯¯¯¯
+    f_obs : array of float
+        Float array of observed proportion.
+    f_theo : array of float
+        Float array of theoretical proportion.
+        
+    returns
+    ¯¯¯¯¯¯¯
+    rmssd : float
+        root mean sum of squares deviation
+
+    """
+    if len(f_theo) != len(f_obs): return -1
+    rmssd = math.sqrt(calculate_ssd(f_obs, f_theo) / len(f_theo))
+    print(f"RMSSD : {rmssd}")
+    return rmssd
+
+        
+def chi2_test(data_obs, f_theo, nb_digit=1):
+    """Chisquare test for Benford law.
+    
+    Function performing a chisquare test of compliance to Benford law. 
+    
+    Parameters
+    ¯¯¯¯¯¯¯¯¯
+    data_obs : array of int
+        Interger array of observed dataset.
+    f_theo : array of float
+        Float array of theoretical frequency.
+    nb_digit : int
+        Number of first siginficant digits. Default is `1`.
+        
+    Returns
+    ¯¯¯¯¯¯¯
+    chi2 : float
+        statistics of chisquare test.
+    p_avl : float
+        p-value of chi2.
+    
+    """
+    d_theo = np.array(f_theo * len(data_obs))
+    d_obs = count_first_digit(data_obs, nb_digit)
+    chi2, p_val = power_divergence(f_obs=d_obs, f_exp=d_theo, lambda_=1)
+    print(f"statistics : {chi2} ; p-value : {p_val}")
+    return chi2, p_val
+
+
+def g_test(data_obs, f_theo, nb_digit=1):
+    """G-test for Benford law.
+    
+    Function performing a G-test of compliance to Benford law. 
+    
+    Parameters
+    ¯¯¯¯¯¯¯¯¯
+    data_obs : array of int
+        Interger array of observed dataset.
+    f_theo : array of float
+        Float array of theoretical frequency.
+    nb_digit : int
+        Number of first siginficant digits. Default is `1`.
+        
+    Returns
+    ¯¯¯¯¯¯¯
+    g : float
+        statistics of G-test.
+    p_avl : float
+        p-value of chi2.
+    
+    """
+    d_theo = np.array(f_theo * len(data_obs))
+    d_obs = count_first_digit(data_obs, nb_digit)
+    print(d_obs)
+    print(d_theo)
+    g, p_val = power_divergence(f_obs=d_obs, f_exp=d_theo, lambda_=0)
+    print(f"statistics : {g} ; p-value : {p_val}")
+    return g, p_val
+
+
 def calculate_bootstrap_chi2(data_obs, f_theo, nb_digit, nb_val=1000,
                              nb_loop=1000, type_test=1):
     """Average of calculated chi2 and asociate p_value.
@@ -147,7 +310,7 @@ def calculate_bootstrap_chi2(data_obs, f_theo, nb_digit, nb_val=1000,
     ¯¯¯¯¯¯¯¯¯¯
     data_obs : array of int
         Integer array of observed dataset.
-    f_theo : array of float
+    f_theo : array of float-80.72309844128006
         Float array of theoretical frequency.
     nb_digit: int
         Number of first significant digits. Default is `1`.
