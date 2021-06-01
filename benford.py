@@ -208,7 +208,8 @@ def calculate_ssd(f_obs, f_theo):
     to percentage for the calculation.
 
     """
-    if len(f_theo) != len(f_obs): return -1
+    if len(f_theo) != len(f_obs):
+        return -1
     sdd = sum((100*f_obs - 100*f_theo)**2)
     print(f"SDD : {sdd}")
     return sdd
