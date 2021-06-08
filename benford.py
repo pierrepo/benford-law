@@ -81,6 +81,7 @@ def count_first_digit(numbers, nb_digit=1):
     return digit_distrib
 
 
+
 def normalize_first_digit(array):
     """Normalize observed distribution of the first significant digits.
 
