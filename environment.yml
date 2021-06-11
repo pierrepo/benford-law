@@ -16,3 +16,4 @@ dependencies:
     - pylint
     - pydocstyle
     - pytest
+    - pytest-cov
