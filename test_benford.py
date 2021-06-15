@@ -190,10 +190,10 @@ def test_build_hist_freq_ben():
     proportion is correct.
     """
     # Setup
-    freq_obs = np.array([0.30103,    0.17609126, 0.12493874,
+    freq_theo = np.array([0.30103,    0.17609126, 0.12493874,
                          0.09691001, 0.07918125, 0.06694679,
                          0.05799195, 0.05115252, 0.0457574])
-    freq_theo = np.array([0.30, 0.17, 0.12,
+    freq_obs = np.array([0.30, 0.17, 0.12,
                           0.09, 0.07, 0.06,
                           0.05, 0.05, 0.04])
 
@@ -209,13 +209,13 @@ def test_build_hist_freq_ben():
 
 def test_calculate_pom():
     """
-    Test is physical order of magnitude is correct.
+    Test if physical order of magnitude is correct.
     """
     # Setup
     correct_pom = 47016.3806552262
+    data_obs = np.array([0.52, 12, 12055, 548, 275, 23.215, 0.2564])
 
     # Exercise
-    data_obs = np.array([0.52, 12, 12055, 548, 275, 23.215, 0.2564])
     current_pom = ben.calculate_pom(data_obs)
 
     # Verify
@@ -224,6 +224,109 @@ def test_calculate_pom():
     # Cleanup - None
 
 
+def test_calculate_oom():
+    """
+    Test if order of magnitude is correct.
+    """
+    # Setup
+    correct_oom = 4.672249193866692
+    data_obs = np.array([0.52, 12, 12055, 548, 275, 23.215, 0.2564])
+
+    # Exercise
+    current_oom = ben.calculate_oom(data_obs)
+
+    # Verify
+    assert_almost_equal(correct_oom, current_oom, 10)
+
+    # Cleanup - None
+
+
+def test_calculate_ssd():
+    """
+    Test if sum of squares deviation is correct.
+    """
+    #Setup
+    correct_ssd = 3.4120420415479993
+    freq_theo = np.array([0.30103,    0.17609126, 0.12493874,
+                         0.09691001, 0.07918125, 0.06694679,
+                         0.05799195, 0.05115252, 0.0457574])
+    freq_obs = np.array([0.30, 0.17, 0.12,
+                          0.09, 0.07, 0.06,
+                          0.05, 0.05, 0.04])
+
+    # Exercise
+    current_ssd = ben.calculate_ssd(freq_obs, freq_theo)
+
+    # Verify
+    assert_almost_equal(correct_ssd, current_ssd, 10)
+
+    # Cleanup - None
+
+
+def test_calculate_rmssd():
+    """
+    Test if root mean sum of squares deviation is correct.
+    """
+    # Setup
+    correct_rmssd = 0.615723787419507
+    freq_theo = np.array([0.30103,    0.17609126, 0.12493874,
+                         0.09691001, 0.07918125, 0.06694679,
+                         0.05799195, 0.05115252, 0.0457574])
+    freq_obs = np.array([0.30, 0.17, 0.12,
+                          0.09, 0.07, 0.06,
+                          0.05, 0.05, 0.04])
+
+    # Exercise
+    current_rmssd = ben.calculate_rmssd(freq_obs, freq_theo)
+
+    # Verify
+    assert_almost_equal(correct_rmssd, current_rmssd, 10)
+
+    # Cleanup - None
+
+
+def test_calculate_dist_hellinger():
+    """
+    Test if Helliinger distance is correct.
+    """
+    # Setup
+    correct_dist_hell = 0.06428335950227015
+    freq_theo = np.array([0.30103,    0.17609126, 0.12493874,
+                         0.09691001, 0.07918125, 0.06694679,
+                         0.05799195, 0.05115252, 0.0457574])
+    freq_obs = np.array([0.30, 0.17, 0.12,
+                          0.09, 0.07, 0.06,
+                          0.05, 0.05, 0.04])
+
+    # Exercise
+    current_dist_hell = ben.calculate_dist_hellinger(freq_obs, freq_theo)
+
+    # Verify
+    assert_almost_equal(correct_dist_hell, current_dist_hell, 10)
+
+    # Cleanup - None
+
+
+def test_calculate_dist_k_and_l():
+    """
+    Test is Kullback & Leibler distance is correct.
+    """
+    # Setup
+    correct_dist_kl = 0.022778534252883863
+    freq_theo = np.array([0.30103,    0.17609126, 0.12493874,
+                         0.09691001, 0.07918125, 0.06694679,
+                         0.05799195, 0.05115252, 0.0457574])
+    freq_obs = np.array([0.30, 0.17, 0.12,
+                          0.09, 0.07, 0.06,
+                          0.05, 0.05, 0.04])
+
+    # Exercise
+    current_dist_kl = ben.calculate_dist_k_and_l(freq_obs, freq_theo)
+
+    # Verify
+    assert_almost_equal(correct_dist_kl, current_dist_kl, 10)
+
+    # Cleanup - None
 if __name__ == "__main__":
     print("\nThis is test script for benford module.\n"
           "Enter : pytest --cov-report term-missing --cov\n"
