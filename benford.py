@@ -337,7 +337,7 @@ def calculate_dist_k_and_l(f_obs, f_theo):
     """
     if len(f_theo) != len(f_obs):
         return -1
-    dist_kl = -sum(f_obs * np.log10(f_theo/f_obs))
+    dist_kl = sum(f_obs * np.log10(f_obs/f_theo))
     print(f"Kullback & Leibler distance : {dist_kl}")
     return dist_kl
 

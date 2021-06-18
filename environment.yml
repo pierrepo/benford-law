@@ -17,3 +17,4 @@ dependencies:
     - pydocstyle
     - pytest
     - pytest-cov
+    - pytest-mlp
